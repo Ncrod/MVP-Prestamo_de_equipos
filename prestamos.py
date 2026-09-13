@@ -68,3 +68,27 @@ def registrar_prestamo():
 
     print(f"Prestamo #{nuevo_prestamo['id']} registrado para {estudiante['nombre']}.")
     print(f"El equipo {codigo} paso a estado 'prestado'.")
+
+
+def registrar_devolucion():
+    print("\n--- Registrar devolucion ---")
+    codigo = pedir_texto("Codigo del equipo a devolver: ").upper()
+
+    if buscar_equipo(codigo) is None:
+        print(f"Error: no existe un equipo con el codigo {codigo}.")
+        return
+
+    prestamos = cargar(RUTA_PRESTAMOS)
+    prestamo = buscar_prestamo_activo(prestamos, codigo)
+    if prestamo is None:
+        print(f"Error: el equipo {codigo} no tiene un prestamo activo.")
+        return
+
+    prestamo["fecha_devolucion"] = date.today().isoformat()
+    prestamo["estado"] = "cerrado"
+
+    guardar(RUTA_PRESTAMOS, prestamos)
+    cambiar_estado_equipo(codigo, "disponible")
+
+    print(f"Devolucion registrada. Prestamo #{prestamo['id']} cerrado.")
+    print(f"El equipo {codigo} paso a estado 'disponible'.")
