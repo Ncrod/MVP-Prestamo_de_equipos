@@ -1,7 +1,7 @@
 import json
 import os
 
-# Rutas
+# Rutas 
 
 CARPETA_PROYECTO = os.path.dirname(os.path.abspath(__file__))
 CARPETA_DATOS = os.path.join(CARPETA_PROYECTO, "datos")
