@@ -59,3 +59,23 @@ def registrar_equipo():
     equipos.append(nuevo_equipo)
     guardar(RUTA_EQUIPOS, equipos)
     print(f"Equipo {codigo} registrado correctamente.")
+
+# ---------------- HU02 ----------------
+def listar_equipos():
+    print("\n--- Listado de equipos ---")
+    equipos = cargar(RUTA_EQUIPOS)
+
+    if len(equipos) == 0:
+        print("No hay equipos registrados.")
+        return
+
+    print(f"{'CODIGO':<10}{'TIPO':<14}{'MARCA':<12}{'MODELO':<12}{'ESTADO':<14}")
+    print("-" * 62)
+    disponibles = 0
+    for equipo in equipos:
+        print(f"{equipo['codigo']:<10}{equipo['tipo']:<14}{equipo['marca']:<12}"
+              f"{equipo['modelo']:<12}{equipo['estado']:<14}")
+        if equipo["estado"] == "disponible":
+            disponibles += 1
+    print("-" * 62)
+    print(f"Total: {len(equipos)} equipo(s) | Disponibles: {disponibles}")
