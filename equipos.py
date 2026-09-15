@@ -33,7 +33,7 @@ def pedir_estado():
         print("Error: estado invalido. Escriba 'disponible' o 'mantenimiento'.")
 
 
-# ---------------- HU01 ----------------
+
 def registrar_equipo():
     print("\n--- Registrar equipo ---")
     codigo = pedir_texto("Codigo del equipo: ").upper()
@@ -60,7 +60,7 @@ def registrar_equipo():
     guardar(RUTA_EQUIPOS, equipos)
     print(f"Equipo {codigo} registrado correctamente.")
 
-# ---------------- HU02 ----------------
+
 def listar_equipos():
     print("\n--- Listado de equipos ---")
     equipos = cargar(RUTA_EQUIPOS)
@@ -79,3 +79,27 @@ def listar_equipos():
             disponibles += 1
     print("-" * 62)
     print(f"Total: {len(equipos)} equipo(s) | Disponibles: {disponibles}")
+
+
+def eliminar_equipo():
+    print("\n--- Eliminar equipo ---")
+    codigo = pedir_texto("Codigo del equipo a eliminar: ").upper()
+    equipo = buscar_equipo(codigo)
+
+    if equipo is None:
+        print(f"Error: no existe un equipo con el codigo {codigo}.")
+        return
+
+    if equipo["estado"] == "prestado":
+        print(f"Error: el equipo {codigo} esta prestado y no se puede eliminar.")
+        return
+
+    confirmacion = input(f"Seguro que desea eliminar el equipo {codigo}? (s/n): ").strip().lower()
+    if confirmacion != "s":
+        print("Operacion cancelada. El equipo no fue eliminado.")
+        return
+
+    equipos = cargar(RUTA_EQUIPOS)
+    equipos_restantes = [e for e in equipos if e["codigo"] != codigo]
+    guardar(RUTA_EQUIPOS, equipos_restantes)
+    print(f"Equipo {codigo} eliminado del inventario.")
