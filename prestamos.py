@@ -109,3 +109,21 @@ def listar_equipos_prestados():
               f"{nombre_estudiante(prestamo['documento']):<22}{prestamo['fecha_prestamo']:<16}")
     print("-" * 60)
     print(f"Total: {len(activos)} equipo(s) prestado(s)")
+
+def listar_historial():
+    print("\n--- Historial de prestamos ---")
+    prestamos = cargar(RUTA_PRESTAMOS)
+
+    if len(prestamos) == 0:
+        print("No hay prestamos registrados.")
+        return
+
+    print(f"{'ID':<5}{'EQUIPO':<10}{'ESTUDIANTE':<22}{'PRESTAMO':<13}{'DEVOLUCION':<13}{'ESTADO':<8}")
+    print("-" * 71)
+    for prestamo in prestamos:
+        devolucion = prestamo["fecha_devolucion"] or "-"
+        print(f"{prestamo['id']:<5}{prestamo['codigo_equipo']:<10}"
+              f"{nombre_estudiante(prestamo['documento']):<22}"
+              f"{prestamo['fecha_prestamo']:<13}{devolucion:<13}{prestamo['estado']:<8}")
+    print("-" * 71)
+    print(f"Total: {len(prestamos)} prestamo(s)")
