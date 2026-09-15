@@ -92,3 +92,20 @@ def registrar_devolucion():
 
     print(f"Devolucion registrada. Prestamo #{prestamo['id']} cerrado.")
     print(f"El equipo {codigo} paso a estado 'disponible'.")
+
+def listar_equipos_prestados():
+    print("\n--- Equipos actualmente prestados ---")
+    prestamos = cargar(RUTA_PRESTAMOS)
+    activos = [p for p in prestamos if p["estado"] == "activo"]
+
+    if len(activos) == 0:
+        print("No hay equipos prestados actualmente.")
+        return
+
+    print(f"{'EQUIPO':<10}{'DOCUMENTO':<12}{'ESTUDIANTE':<22}{'FECHA PRESTAMO':<16}")
+    print("-" * 60)
+    for prestamo in activos:
+        print(f"{prestamo['codigo_equipo']:<10}{prestamo['documento']:<12}"
+              f"{nombre_estudiante(prestamo['documento']):<22}{prestamo['fecha_prestamo']:<16}")
+    print("-" * 60)
+    print(f"Total: {len(activos)} equipo(s) prestado(s)")
