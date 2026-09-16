@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "documento": "1001",
+        "codigo_equipo": "EQ001",
+        "fecha_prestamo": "2026-09-15",
+        "fecha_devolucion": "2026-09-15",
+        "estado": "cerrado"
+    },
+    {
+        "id": 2,
+        "documento": "1001",
+        "codigo_equipo": "EQ001",
+        "fecha_prestamo": "2026-09-15",
+        "fecha_devolucion": "2026-09-15",
+        "estado": "cerrado"
+    },
+    {
+        "id": 3,
+        "documento": "1002",
+        "codigo_equipo": "EQ002",
+        "fecha_prestamo": "2026-09-15",
+        "fecha_devolucion": "2026-09-15",
+        "estado": "cerrado"
+    },
+    {
+        "id": 4,
+        "documento": "1003",
+        "codigo_equipo": "EQ003",
+        "fecha_prestamo": "2026-09-15",
+        "fecha_devolucion": "2026-09-15",
+        "estado": "cerrado"
+    }
+]

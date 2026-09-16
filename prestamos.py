@@ -1,0 +1,129 @@
+from datetime import date
+
+from archivos import cargar, guardar, pedir_texto, RUTA_PRESTAMOS
+from equipos import buscar_equipo, cambiar_estado_equipo
+from estudiantes import buscar_estudiante
+
+
+def siguiente_id(prestamos):
+   
+    if len(prestamos) == 0:
+        return 1
+    return max(prestamo["id"] for prestamo in prestamos) + 1
+
+
+def buscar_prestamo_activo(prestamos, codigo_equipo):
+    
+    for prestamo in prestamos:
+        if prestamo["codigo_equipo"] == codigo_equipo and prestamo["estado"] == "activo":
+            return prestamo
+    return None
+
+
+def nombre_estudiante(documento):
+   
+    estudiante = buscar_estudiante(documento)
+    if estudiante is None:
+        return "(no encontrado)"
+    return estudiante["nombre"]
+
+
+
+def registrar_prestamo():
+    print("\n--- Registrar prestamo ---")
+
+    
+    documento = pedir_texto("Documento del estudiante: ")
+    estudiante = buscar_estudiante(documento)
+    if estudiante is None:
+        print(f"Error: no existe un estudiante con el documento {documento}.")
+        return
+
+    
+    codigo = pedir_texto("Codigo del equipo: ").upper()
+    equipo = buscar_equipo(codigo)
+    if equipo is None:
+        print(f"Error: no existe un equipo con el codigo {codigo}.")
+        return
+
+    
+    if equipo["estado"] != "disponible":
+        print(f"Error: el equipo {codigo} no esta disponible (estado actual: {equipo['estado']}).")
+        return
+
+    prestamos = cargar(RUTA_PRESTAMOS)
+    nuevo_prestamo = {
+        "id": siguiente_id(prestamos),
+        "documento": documento,
+        "codigo_equipo": codigo,
+        "fecha_prestamo": date.today().isoformat(),
+        "fecha_devolucion": None,
+        "estado": "activo",
+    }
+    prestamos.append(nuevo_prestamo)
+
+    
+    guardar(RUTA_PRESTAMOS, prestamos)
+    cambiar_estado_equipo(codigo, "prestado")
+
+    print(f"Prestamo #{nuevo_prestamo['id']} registrado para {estudiante['nombre']}.")
+    print(f"El equipo {codigo} paso a estado 'prestado'.")
+
+
+def registrar_devolucion():
+    print("\n--- Registrar devolucion ---")
+    codigo = pedir_texto("Codigo del equipo a devolver: ").upper()
+
+    if buscar_equipo(codigo) is None:
+        print(f"Error: no existe un equipo con el codigo {codigo}.")
+        return
+
+    prestamos = cargar(RUTA_PRESTAMOS)
+    prestamo = buscar_prestamo_activo(prestamos, codigo)
+    if prestamo is None:
+        print(f"Error: el equipo {codigo} no tiene un prestamo activo.")
+        return
+
+    prestamo["fecha_devolucion"] = date.today().isoformat()
+    prestamo["estado"] = "cerrado"
+
+    guardar(RUTA_PRESTAMOS, prestamos)
+    cambiar_estado_equipo(codigo, "disponible")
+
+    print(f"Devolucion registrada. Prestamo #{prestamo['id']} cerrado.")
+    print(f"El equipo {codigo} paso a estado 'disponible'.")
+
+def listar_equipos_prestados():
+    print("\n--- Equipos actualmente prestados ---")
+    prestamos = cargar(RUTA_PRESTAMOS)
+    activos = [p for p in prestamos if p["estado"] == "activo"]
+
+    if len(activos) == 0:
+        print("No hay equipos prestados actualmente.")
+        return
+
+    print(f"{'EQUIPO':<10}{'DOCUMENTO':<12}{'ESTUDIANTE':<22}{'FECHA PRESTAMO':<16}")
+    print("-" * 60)
+    for prestamo in activos:
+        print(f"{prestamo['codigo_equipo']:<10}{prestamo['documento']:<12}"
+              f"{nombre_estudiante(prestamo['documento']):<22}{prestamo['fecha_prestamo']:<16}")
+    print("-" * 60)
+    print(f"Total: {len(activos)} equipo(s) prestado(s)")
+
+def listar_historial():
+    print("\n--- Historial de prestamos ---")
+    prestamos = cargar(RUTA_PRESTAMOS)
+
+    if len(prestamos) == 0:
+        print("No hay prestamos registrados.")
+        return
+
+    print(f"{'ID':<5}{'EQUIPO':<10}{'ESTUDIANTE':<22}{'PRESTAMO':<13}{'DEVOLUCION':<13}{'ESTADO':<8}")
+    print("-" * 71)
+    for prestamo in prestamos:
+        devolucion = prestamo["fecha_devolucion"] or "-"
+        print(f"{prestamo['id']:<5}{prestamo['codigo_equipo']:<10}"
+              f"{nombre_estudiante(prestamo['documento']):<22}"
+              f"{prestamo['fecha_prestamo']:<13}{devolucion:<13}{prestamo['estado']:<8}")
+    print("-" * 71)
+    print(f"Total: {len(prestamos)} prestamo(s)")
