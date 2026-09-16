@@ -1,1 +1,14 @@
-[]
+[
+    {
+        "documento": "1001",
+        "nombre": "Ana Perez",
+        "correo": "ana@mail.com",
+        "programa": "Ing. Sistemas"
+    },
+    {
+        "documento": "1002",
+        "nombre": "Pepito Perez",
+        "correo": "pepito@correo.com",
+        "programa": "Derecho"
+    }
+]
