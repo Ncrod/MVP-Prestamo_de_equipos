@@ -4,13 +4,13 @@
         "tipo": "Portatil",
         "marca": "HP",
         "modelo": "240",
-        "estado": "prestado"
+        "estado": "disponible"
     },
     {
         "codigo": "EQ002",
         "tipo": "Tablet",
         "marca": "Apple",
         "modelo": "A16",
-        "estado": "prestado"
+        "estado": "disponible"
     }
 ]

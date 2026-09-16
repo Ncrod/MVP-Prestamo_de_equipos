@@ -10,5 +10,11 @@
         "nombre": "Pepito Perez",
         "correo": "pepito@correo.com",
         "programa": "Derecho"
+    },
+    {
+        "documento": "1003",
+        "nombre": "Perencejito",
+        "correo": "perencejito@ejemplo.com",
+        "programa": "Arquitectura"
     }
 ]
